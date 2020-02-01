@@ -1,0 +1,21 @@
+<!doctype html>
+		<html>
+    <head>
+        <script src='/socket.io/socket.io.js'></script>
+        <script>
+          const websocket = new WebSocket('ws://localhost:8080');
+
+          websocket.onopen = (event) => {
+            console.log('it is opened');
+          };
+
+          websocket.onmessage = (event) => {
+            console.log('message');
+            console.log(event);
+          };
+        </script>
+    </head>
+    <body>
+        <ul id='messages'></ul>
+    </body>
+</html>
