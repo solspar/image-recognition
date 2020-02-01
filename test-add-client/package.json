@@ -1,9 +1,9 @@
 {
-  "name": "untitled",
+  "name": "test-add-client",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "vue-cli-service serve --port 3000",
+    "start": "vue-cli-service serve --port 3001",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
@@ -19,8 +19,6 @@
     "@vue/cli-plugin-router": "^4.1.0",
     "@vue/cli-plugin-typescript": "^4.1.0",
     "@vue/cli-service": "^4.1.0",
-    "sass": "^1.23.7",
-    "sass-loader": "^8.0.0",
     "typescript": "~3.5.3",
     "vue-template-compiler": "^2.6.10"
   }
