@@ -1,6 +1,6 @@
 ## image-recognition
 # Swamphacks 2020 - Sage
-University of Florida
+University of Florida<br>
 January 31 - February 2, 2020
 
 Authors: Song Li (Gnoseil), Evan Rupert (evanrupert), Varun Puri (vmpuri), Stephen Lantin (slantin)
