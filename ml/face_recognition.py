@@ -7,7 +7,8 @@ Created on Sat Feb  1 03:30:57 2020
 
 import cv2
 import os
-import time
+from websocket import create_connection
+import json
 """
 import logging
 import cloudstorage as gcs
@@ -48,12 +49,56 @@ def create_file(self, filename):
   self.tmp_filenames_to_clean_up.append(filename)
 
 """
+from google.cloud import storage
+
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read('face_trainer/trainer.yml')
 
 faceCascade = cv2.CascadeClassifier(r'C:\Python38\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml')
 font = cv2.FONT_HERSHEY_SIMPLEX
+
+# The name for the new bucket
+bucket_name = "swamp-ml-1580531853344.appspot.com"
+# Instantiates a client
+def make_blob_public(bucket_name, blob_name):
+    """Makes a blob publicly accessible."""
+    # bucket_name = "your-bucket-name"
+    # blob_name = "your-object-name"
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    blob.make_public()
+
+    return blob.public_url
+        
+    
+
+
+
+
+
+
+def upload_blob(bucket_name, source_file_name, destination_blob_name):
+    """Uploads a file to the bucket."""
+    # bucket_name = "your-bucket-name"
+    # source_file_name = "local/path/to/file"
+    # destination_blob_name = "storage-object-name"
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+
+    blob.upload_from_filename(source_file_name)
+
+    print(
+        "File {} uploaded to {}.".format(
+            source_file_name, destination_blob_name
+        )
+    )
+
 
 
 idnum=0
@@ -64,12 +109,12 @@ for imagepath in imagePaths:
     id = str(os.path.split(imagepath)[-1].split(".")[2])
     if (id not in names):
         names.append(id)
-
 cam = cv2.VideoCapture(0)
 minW = 0.1*cam.get(3)
 minH = 0.1*cam.get(4)
 
 count =0
+sendtime=0
 while True:
     ret, img = cam.read()
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -84,16 +129,27 @@ while True:
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
         idnum, confidence = recognizer.predict(gray[y:y+h, x:x+w])
-
-        if confidence <60:
+        
+        if confidence <80:
             count+=1
             idnum = names[idnum]
             confidence = "{0}%".format(round(100 - confidence))
-            if count>20:
-                cam.release()
-                cv2.destroyAllWindows()
+            
+            if count>30:
+                sendtime+=1
+                if sendtime==1:
+                    appdict={
+                            'name': idnum,
+                            'photo': make_blob_public('swamp-ml-1580531853344.appspot.com', "Facedata/User." +str(idnum) +'.jpg')}
+                    ws=create_connection("ws://35.193.149.149/")
+                    app_json=json.dumps(appdict)
+                    ws.send(app_json)
+                    sendtime+=1
+                
+            
                 #send imformation
         else:
+            sendtime=0
             count=0
             idnum = "unknown"
             confidence = "{0}%".format(round(100 - confidence))
