@@ -1,7 +1,8 @@
 ## image-recognition (Sage)
 # Swamphacks 2020
 January 31 - February 2, 2020
-Authors: Song Li, Evan Rupert, Varun Puri, Stephen Lantin
+
+Authors: Song Li (Gnoseil), Evan Rupert (evanrupert), Varun Puri (vmpuri), Stephen Lantin (slantin)
 
 A company leader losing track of half of his workforce in the office. A software engineer whose boss might as well be a mirage. A graduate student knocking on the door of his advisor's office, only to hear nothing in return, and an intern losing his supervisor on the manufacturing floor. The inspiration for Sage arose from a frustration so small as to be nagging, yet so ubiquitous among our team members--where are our coworkers?
 
