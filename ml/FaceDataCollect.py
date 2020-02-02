@@ -45,7 +45,7 @@ while True:
         count += 1
 
         # save picture/change the place to save from facedata to cloud
-        cv2.imwrite("Facedata/User." + str(face_id) + '.' + str(count) + '.jpg', gray[y: y + h, x: x + w])
+        cv2.imwrite("Facedata/User." + str(face_id)+ '.'+str(face_name) + '.' + str(count) +'.jpg', gray[y: y + h, x: x + w])
 
         cv2.imshow('image', img)
 
