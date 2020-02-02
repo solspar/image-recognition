@@ -10,13 +10,13 @@ Sage uses facial recognition to identify people entering and leaving a building 
 
 Sage consists of three parts:
 
-<b>1) Model training with OpenCV</b>
+<b>1) Model training with OpenCV</b><br>
 We trained a machine learning model with a facial dataset available in Python's OpenCV. Training was done using a Haar classifier cascade<sup>1</sup>, as it is more computationally efficient than detecting features by means of pixel intensity only<sup>2</sup>.
 
-<b>2) Image Capture</b>
+<b>2) Image Capture</b><br>
 Images of the "onboarding process" were captured using an standard laptop webcam. When an employee walks through a doorway, a camera takes an image of them.
 
-<b>3) Web Application</b>
+<b>3) Web Application</b><br>
 The back-end of the web application was written in node.js with Express. It used web sockets to connect components for real-time communication. We used the front-end framework vue.js to make a clean, fun dashboard to present information to employees.
 
 See https://devpost.com/software/sage-kpmcgw for more information.
