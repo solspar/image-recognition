@@ -56,6 +56,7 @@
       h4 {
         margin-top: 0;
         margin-bottom: 0;
+        font-weight: 600;
       }
 
       p {
