@@ -7,13 +7,7 @@
       <section>
         <h2>On deck</h2>
         <div class="people-container">
-          <div class="person-card" v-for="person in people">
-            <img :src="person.photo" :alt="person.name + '\'s photo'">
-            <div class="card-description">
-              <h4>{{ person.name }}</h4>
-              <p>{{ humanizeTime(person.arrival) }}</p>
-            </div>
-          </div>
+          <PersonCard v-for="person in people" :person="person"></PersonCard>
         </div>
       </section>
       <aside>
@@ -39,12 +33,8 @@
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator'
   import moment from 'moment'
-
-  interface Person {
-    name: string
-    photo: string
-    arrival: moment.Moment
-  }
+  import { Person } from '@/models/person'
+  import PersonCard from '@/components/PersonCard.vue'
 
   enum ActivityType {
     ARRIVAL,
@@ -58,7 +48,9 @@
     type: ActivityType
   }
 
-  @Component
+  @Component({
+    components: {PersonCard}
+  })
   export default class App extends Vue {
     private websocket!: WebSocket
     private people: Person[] = []
@@ -66,76 +58,67 @@
 
     constructor() {
       super()
-      this.people = [
-        {
-          name: 'James Smith',
-          photo: 'https://c8.alamy.com/comp/EDG6K4/handsome-young-man-opening-door-to-enter-into-a-room-looking-down-EDG6K4.jpg',
-          arrival: moment.utc('10:00am', 'hh:mm'),
-        },
-        {
-          name: 'Jasmine Puri',
-          photo: 'https://previews.123rf.com/images/lacheev/lacheev1908/lacheev190800150/129645964-cheerful-young-woman-inviting-people-to-enter-in-home-girl-blonde-opening-her-house-front-door.jpg',
-          arrival: moment.utc('2:00pm', 'hh:mm')
-        },
-        {
-          name: 'Evan Rupert',
-          photo: 'https://www.seekpng.com/png/detail/133-1333195_man-walking-through-door-walk-through-clip-art.png',
-          arrival: moment.utc('20:30pm', 'hh:mm')
-        },
-        {
-          name: 'Varun Puri',
-          photo: 'https://www.realitybasedleadership.com/wp-content/uploads/2016/07/Open-Door-Policy.jpg',
-          arrival: moment.utc('21:43', 'hh:mm')
-        }
-      ]
+      // this.people = [
+      //   {
+      //     name: 'James Smith',
+      //     photo: 'https://c8.alamy.com/comp/EDG6K4/handsome-young-man-opening-door-to-enter-into-a-room-looking-down-EDG6K4.jpg',
+      //     arrival: moment.utc('10:00', 'hh:mm').local(),
+      //   },
+      //   {
+      //     name: 'Jasmine Puri',
+      //     photo: 'https://previews.123rf.com/images/lacheev/lacheev1908/lacheev190800150/129645964-cheerful-young-woman-inviting-people-to-enter-in-home-girl-blonde-opening-her-house-front-door.jpg',
+      //     arrival: moment.utc('14:00', 'hh:mm').local()
+      //   },
+      //   {
+      //     name: 'Evan Rupert',
+      //     photo: 'https://www.seekpng.com/png/detail/133-1333195_man-walking-through-door-walk-through-clip-art.png',
+      //     arrival: moment.utc('20:30', 'hh:mm')
+      //   },
+      //   {
+      //     name: 'Varun Puri',
+      //     photo: 'https://www.realitybasedleadership.com/wp-content/uploads/2016/07/Open-Door-Policy.jpg',
+      //     arrival: moment.utc('21:43', 'hh:mm')
+      //   }
+      // ]
 
-      this.activity = [
-        {
-          name: 'James Smith',
-          photo: 'https://c8.alamy.com/comp/EDG6K4/handsome-young-man-opening-door-to-enter-into-a-room-looking-down-EDG6K4.jpg',
-          time: moment.utc('8:00am', 'hh:mm'),
-          type: ActivityType.ARRIVAL
-        },
-        {
-          name: 'James Smith',
-          photo: 'https://c8.alamy.com/comp/EDG6K4/handsome-young-man-opening-door-to-enter-into-a-room-looking-down-EDG6K4.jpg',
-          time: moment.utc('8:20am', 'hh:mm'),
-          type: ActivityType.DEPARTURE
-        },
-        {
-          name: 'James Smith',
-          photo: 'https://c8.alamy.com/comp/EDG6K4/handsome-young-man-opening-door-to-enter-into-a-room-looking-down-EDG6K4.jpg',
-          time: moment.utc('8:30am', 'hh:mm'),
-          type: ActivityType.ARRIVAL
-        },
-        {
-          name: 'Jasmine Puri',
-          photo: 'https://previews.123rf.com/images/lacheev/lacheev1908/lacheev190800150/129645964-cheerful-young-woman-inviting-people-to-enter-in-home-girl-blonde-opening-her-house-front-door.jpg',
-          time: moment.utc('2:00pm', 'hh:mm'),
-          type: ActivityType.ARRIVAL
-        },
-        {
-          name: 'Evan Rupert',
-          photo: 'https://www.seekpng.com/png/detail/133-1333195_man-walking-through-door-walk-through-clip-art.png',
-          time: moment.utc('20:30pm', 'hh:mm'),
-          type: ActivityType.ARRIVAL
-        },
-        {
-          name: 'Varun Puri',
-          photo: 'https://www.realitybasedleadership.com/wp-content/uploads/2016/07/Open-Door-Policy.jpg',
-          time: moment.utc('22:03pm', 'hh:mm'),
-          type: ActivityType.ARRIVAL
-        }
-      ]
-
-      setInterval(() => {
-        console.log('updateing...')
-        this.$forceUpdate()
-      }, 60000)
-    }
-
-    humanizeTime(time: moment.Moment): string {
-      return 'hard at work for ' + time.fromNow(true)
+      // this.activity = [
+      //   {
+      //     name: 'James Smith',
+      //     photo: 'https://c8.alamy.com/comp/EDG6K4/handsome-young-man-opening-door-to-enter-into-a-room-looking-down-EDG6K4.jpg',
+      //     time: moment.utc('8:00', 'hh:mm'),
+      //     type: ActivityType.ARRIVAL
+      //   },
+      //   {
+      //     name: 'James Smith',
+      //     photo: 'https://c8.alamy.com/comp/EDG6K4/handsome-young-man-opening-door-to-enter-into-a-room-looking-down-EDG6K4.jpg',
+      //     time: moment.utc('8:20', 'hh:mm'),
+      //     type: ActivityType.DEPARTURE
+      //   },
+      //   {
+      //     name: 'James Smith',
+      //     photo: 'https://c8.alamy.com/comp/EDG6K4/handsome-young-man-opening-door-to-enter-into-a-room-looking-down-EDG6K4.jpg',
+      //     time: moment.utc('8:30', 'hh:mm'),
+      //     type: ActivityType.ARRIVAL
+      //   },
+      //   {
+      //     name: 'Jasmine Puri',
+      //     photo: 'https://previews.123rf.com/images/lacheev/lacheev1908/lacheev190800150/129645964-cheerful-young-woman-inviting-people-to-enter-in-home-girl-blonde-opening-her-house-front-door.jpg',
+      //     time: moment.utc('14:00', 'hh:mm'),
+      //     type: ActivityType.ARRIVAL
+      //   },
+      //   {
+      //     name: 'Evan Rupert',
+      //     photo: 'https://www.seekpng.com/png/detail/133-1333195_man-walking-through-door-walk-through-clip-art.png',
+      //     time: moment.utc('20:30', 'hh:mm'),
+      //     type: ActivityType.ARRIVAL
+      //   },
+      //   {
+      //     name: 'Varun Puri',
+      //     photo: 'https://www.realitybasedleadership.com/wp-content/uploads/2016/07/Open-Door-Policy.jpg',
+      //     time: moment.utc('22:03', 'hh:mm'),
+      //     type: ActivityType.ARRIVAL
+      //   }
+      // ]
     }
 
     isArrival(event: ActivityEvent): boolean {
@@ -169,13 +152,13 @@
       this.people.push({
         name,
         photo,
-        arrival: moment.utc()
+        arrival: moment.utc().local()
       })
 
       this.activity.push({
         name,
         photo,
-        time: moment.utc(),
+        time: moment.utc().local(),
         type: ActivityType.ARRIVAL
       })
     }
@@ -186,7 +169,7 @@
       this.activity.push({
         name,
         photo,
-        time: moment.utc(),
+        time: moment.utc().local(),
         type: ActivityType.DEPARTURE
       })
     }
@@ -222,43 +205,6 @@
   .people-container {
     display: flex;
     flex-wrap: wrap;
-  }
-
-  .person-card {
-    margin-right: 3rem;
-    margin-bottom: 3rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    border-radius: 15px;
-
-    img {
-      height: 150px;
-      width: 230px;
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-    }
-
-    .card-description {
-      margin-left: 1rem;
-      margin-top: 0.25rem;
-      margin-bottom: 0.5rem;
-
-      font-family: 'Open Sans', sans-serif;
-
-      h4 {
-        margin-top: 0;
-        margin-bottom: 0;
-      }
-
-      p {
-        color: rgba(black, 0.5);
-        font-style: normal;
-        font-weight: 300;
-        font-size: 14px;
-
-        margin-top: 0.25rem;
-        margin-bottom: 0.25rem;
-      }
-    }
   }
 
   .activity-container {
