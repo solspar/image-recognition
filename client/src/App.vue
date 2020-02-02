@@ -3,7 +3,7 @@ import {ActivityType} from "@/models/activity-event";
 <template>
   <div id="app">
     <header>
-      <h1>CHEQIN</h1>
+      <img src="./assets/sage_logo.png" alt="sage logo">
     </header>
     <main>
       <section>
@@ -103,7 +103,7 @@ import {ActivityType} from "@/models/activity-event";
 
       setTimeout(() => {
         this.notification = null
-      }, 2000)
+      }, 3000)
     }
   }
 </script>
@@ -120,6 +120,13 @@ import {ActivityType} from "@/models/activity-event";
       font-size: 54px;
       margin-left: 5rem;
     }
+
+    img {
+      width: 300px;
+      margin-left: 5rem;
+      margin-top: 1rem;
+      margin-bottom: 0;
+    }
   }
 
   main {
@@ -127,7 +134,7 @@ import {ActivityType} from "@/models/activity-event";
     width: 90%;
     margin-left: 5%;
     margin-right: 5%;
-    margin-top: 4rem;
+    margin-top: 1rem;
   }
 
   section {
@@ -150,5 +157,6 @@ import {ActivityType} from "@/models/activity-event";
 
   h2 {
     font-family: 'Roboto', sans-serif;
+    margin-top: 0;
   }
 </style>
